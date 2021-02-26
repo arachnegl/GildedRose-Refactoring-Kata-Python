@@ -10,20 +10,20 @@ from gilded_rose import (
 )
 
 
-_items = [
-     dict(name="+5 Dexterity Vest", sell_in=10, quality=20),
-     dict(name="Aged Brie", sell_in=2, quality=0),
-     dict(name="Elixir of the Mongoose", sell_in=5, quality=7),
-     dict(name="Sulfuras, Hand of Ragnaros", sell_in=0, quality=80),
-     dict(name="Sulfuras, Hand of Ragnaros", sell_in=-1, quality=80),
-     dict(name="Backstage passes to a TAFKAL80ETC concert", sell_in=15, quality=20),
-     dict(name="Backstage passes to a TAFKAL80ETC concert", sell_in=10, quality=49),
-     dict(name="Backstage passes to a TAFKAL80ETC concert", sell_in=5, quality=49),
-     dict(name="Conjured Mana Cake", sell_in=3, quality=6),
-]
-
 
 class GildedRoseTest(unittest.TestCase):
+    items = [
+         Item(name="+5 Dexterity Vest", sell_in=10, quality=20),
+         Item(name="Aged Brie", sell_in=2, quality=0),
+         Item(name="Elixir of the Mongoose", sell_in=5, quality=7),
+         Item(name="Sulfuras, Hand of Ragnaros", sell_in=0, quality=80),
+         Item(name="Sulfuras, Hand of Ragnaros", sell_in=-1, quality=80),
+         Item(name="Backstage passes to a TAFKAL80ETC concert", sell_in=15, quality=20),
+         Item(name="Backstage passes to a TAFKAL80ETC concert", sell_in=10, quality=49),
+         Item(name="Backstage passes to a TAFKAL80ETC concert", sell_in=5, quality=49),
+         Item(name="Conjured Mana Cake", sell_in=3, quality=6),
+    ]
+
     def test_foo(self):
         items = [Item("foo", 0, 0)]
         gilded_rose = GildedRose(items)
@@ -31,12 +31,25 @@ class GildedRoseTest(unittest.TestCase):
         self.assertEqual("foo", items[0].name)
 
     def test_integration(self):
-        items = [Item(**item) for item in _items]
-        gilded_rose = GildedRose(items)
+        gilded_rose = GildedRose(self.items)
         gilded_rose.update_quality()
 
-        for orig, updated in zip(_items, gilded_rose.items):
-            self.assertEqual(orig['name'], updated.name)
+        expected = [
+            '+5 Dexterity Vest, 9, 19',
+            'Aged Brie, 1, 1', 
+            'Elixir of the Mongoose, 4, 6', 
+            'Sulfuras, Hand of Ragnaros, 0, 80', 
+            'Sulfuras, Hand of Ragnaros, -1, 80', 
+            'Backstage passes to a TAFKAL80ETC concert, 14, 21', 
+            'Backstage passes to a TAFKAL80ETC concert, 9, 50', 
+            'Backstage passes to a TAFKAL80ETC concert, 4, 50', 
+            'Conjured Mana Cake, 2, 5',
+        ]
+
+        self.assertListEqual(
+            list(map(str, gilded_rose.items)),
+            expected,
+        )
         
 
 class ProductTest(unittest.TestCase):
