@@ -6,38 +6,14 @@ class GildedRose(object):
     def __init__(self, items):
         self.items = items
 
-    def update_quality(self):
-        for item in self.items:
-            self._update(item)
-
-    def _update(self, item):
-        if item.name != "Aged Brie" and item.name != "Backstage passes to a TAFKAL80ETC concert":
-            if item.quality > 0:
-                if item.name != "Sulfuras, Hand of Ragnaros":
-                    item.quality = item.quality - 1
-        else:
-            if item.quality < 50:
-                item.quality = item.quality + 1
-                if item.name == "Backstage passes to a TAFKAL80ETC concert":
-                    if item.sell_in < 11:
-                        if item.quality < 50:
-                            item.quality = item.quality + 1
-                    if item.sell_in < 6:
-                        if item.quality < 50:
-                            item.quality = item.quality + 1
-        if item.name != "Sulfuras, Hand of Ragnaros":
-            item.sell_in = item.sell_in - 1
-        if item.sell_in < 0:
-            if item.name != "Aged Brie":
-                if item.name != "Backstage passes to a TAFKAL80ETC concert":
-                    if item.quality > 0:
-                        if item.name != "Sulfuras, Hand of Ragnaros":
-                            item.quality = item.quality - 1
-                else:
-                    item.quality = item.quality - item.quality
-            else:
-                if item.quality < 50:
-                    item.quality = item.quality + 1
+    def update_quality_new(self):
+        self.items = [
+            Product.to_item(
+                Product.from_item(item)
+                .update()
+            )
+           for item in self.items
+        ]
 
 
 class Item:
@@ -89,7 +65,17 @@ class Product:
     def update(self):
         """The generic case
         """
+        if self.quality > 0:
+            self.quality = self.quality - 1
+
         self.sell_in = self.sell_in - 1
+
+        if self.sell_in < 0:
+            if self.quality > 0:
+                if self.name != "Sulfuras, Hand of Ragnaros":
+                    self.quality = self.quality - 1
+
+
         return self
 
 
@@ -115,4 +101,35 @@ class AgedBrie(Product):
         """
         if self.quality < 50:
             self.quality = self.quality + 1
+
+        self.sell_in = self.sell_in - 1
+
+        if self.sell_in < 0:
+            if self.quality < 50:
+                self.quality = self.quality + 1
+
         return self
+
+
+class BackstagePass(Product):
+    name = "Backstage passes to a TAFKAL80ETC concert"
+
+    def update(self) -> None:
+
+        if self.quality < 50:
+            self.quality = self.quality + 1
+            if self.sell_in < 11:
+                if self.quality < 50:
+                    self.quality = self.quality + 1
+            if self.sell_in < 6:
+                if self.quality < 50:
+                    self.quality = self.quality + 1
+
+        self.sell_in = self.sell_in - 1
+
+        if self.sell_in < 0:
+            if self.quality > 0:
+                self.quality = self.quality - 1
+
+        return self
+
