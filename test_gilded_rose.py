@@ -40,6 +40,10 @@ class ItemTest(unittest.TestCase):
              Item(name="A", sell_in=2, quality=0),
              Item(name="A", sell_in=2, quality=0),
         )
+        self.assertNotEqual(
+             Item(name="A", sell_in=1, quality=0),
+             Item(name="A", sell_in=2, quality=0),
+        )
 
 if __name__ == '__main__':
     unittest.main()
