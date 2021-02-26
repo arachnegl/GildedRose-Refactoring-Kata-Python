@@ -43,8 +43,8 @@ class Product:
 
     @classmethod
     def from_item(cls, item):
-        """Dispatches an Item object to its specialised Product if found else to
-        a generic Product.
+        """Dispatches an Item object to its specialised Product
+        if found else to a generic Product.
         """
         return cls._get_class(item)(
             name=item.name,
@@ -80,7 +80,8 @@ class Sulfuras(Product):
 
     def update(self) -> None:
         """
-        Sulfuras, being a legendary item, never has to be sold or decreases in Quality
+        Sulfuras, being a legendary item, never has to be sold
+        or decreases in Quality
         """
         return self
 
@@ -108,9 +109,10 @@ class BackstagePass(Product):
 
     def update(self) -> None:
         """
-        "Backstage passes", increases in Quality as its SellIn value approaches;
-        Quality increases by 2 when there are 10 days or less and by 3
-        when there are 5 days or less but Quality drops to 0 after the concert
+        "Backstage passes", increases in Quality as its SellIn value
+        approaches; Quality increases by 2 when there are 10 days or
+        less and by 3 when there are 5 days or less but Quality drops
+        to 0 after the concert
         """
 
         if self.quality < 50:
