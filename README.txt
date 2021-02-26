@@ -1,4 +1,10 @@
+Code style:
+	 pycodestyle .
+	 black .
 
+Run tests:
+	pytest .
 
-coverage run -m pytest .
-coverage report -m
+Run tests with coverage:
+	coverage run -m pytest .
+	coverage report -m
