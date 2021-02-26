@@ -6,7 +6,7 @@ class GildedRose(object):
     def __init__(self, items):
         self.items = items
 
-    def update_quality_new(self):
+    def update_quality(self):
         self.items = [
             Product.to_item(
                 Product.from_item(item)
@@ -14,6 +14,7 @@ class GildedRose(object):
             )
            for item in self.items
         ]
+        return self
 
 
 class Item:
@@ -132,4 +133,3 @@ class BackstagePass(Product):
                 self.quality = self.quality - 1
 
         return self
-

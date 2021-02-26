@@ -27,7 +27,7 @@ class GildedRoseTest(unittest.TestCase):
 
     def test_integration(self):
         gilded_rose = GildedRose(_items)
-        gilded_rose.update_quality_new()
+        gilded_rose.update_quality()
 
         expected = [
             '+5 Dexterity Vest, 9, 19',
