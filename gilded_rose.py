@@ -1,18 +1,14 @@
 # -*- coding: utf-8 -*-
 from dataclasses import dataclass
 
-class GildedRose(object):
 
+class GildedRose(object):
     def __init__(self, items):
         self.items = items
 
     def update_quality(self):
         self.items = [
-            Product.to_item(
-                Product.from_item(item)
-                .update()
-            )
-           for item in self.items
+            Product.to_item(Product.from_item(item).update()) for item in self.items
         ]
         return self
 
@@ -47,7 +43,7 @@ class Product:
 
     @classmethod
     def from_item(cls, item):
-        """Dispatches an Item object to its specialised Product if found else to 
+        """Dispatches an Item object to its specialised Product if found else to
         a generic Product.
         """
         return cls._get_class(item)(
@@ -64,25 +60,21 @@ class Product:
         )
 
     def update(self):
-        """The generic case
-        """
+        """The generic case"""
         if self.quality > 0:
             self.quality = self.quality - 1
 
         self.sell_in = self.sell_in - 1
 
-        if self.sell_in < 0:
-            if self.quality > 0:
-                if self.name != "Sulfuras, Hand of Ragnaros":
-                    self.quality = self.quality - 1
-
+        if self.sell_in < 0 and self.quality > 0:
+            self.quality = self.quality - 1
 
         return self
 
 
 class Sulfuras(Product):
     name = "Sulfuras, Hand of Ragnaros"
-    quality = 80   # constant
+    quality = 80  # constant
 
     max_quality: int = 80
 
@@ -94,7 +86,7 @@ class Sulfuras(Product):
 
 
 class AgedBrie(Product):
-    name = 'Aged Brie'
+    name = "Aged Brie"
 
     def update(self) -> None:
         """
@@ -105,9 +97,8 @@ class AgedBrie(Product):
 
         self.sell_in = self.sell_in - 1
 
-        if self.sell_in < 0:
-            if self.quality < 50:
-                self.quality = self.quality + 1
+        if self.sell_in < 0 and self.quality < 50:
+            self.quality = self.quality + 1
 
         return self
 
@@ -116,6 +107,11 @@ class BackstagePass(Product):
     name = "Backstage passes to a TAFKAL80ETC concert"
 
     def update(self) -> None:
+        """
+        "Backstage passes", increases in Quality as its SellIn value approaches;
+        Quality increases by 2 when there are 10 days or less and by 3
+        when there are 5 days or less but Quality drops to 0 after the concert
+        """
 
         if self.quality < 50:
             self.quality = self.quality + 1
@@ -129,7 +125,6 @@ class BackstagePass(Product):
         self.sell_in = self.sell_in - 1
 
         if self.sell_in < 0:
-            if self.quality > 0:
-                self.quality = self.quality - 1
+            self.quality = 0
 
         return self
